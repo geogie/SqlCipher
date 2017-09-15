@@ -2,6 +2,9 @@
 
 说明：  
 1. 数据库加密：防止手机root后拿到数据库暴漏信息。
+2. 如果开启混淆加入：  
+   -keep  class net.sqlcipher.** {*;}  
+   -keep  class net.sqlcipher.database.** {*;}
 
 参考：  
 [博客](http://www.cnblogs.com/whoislcj/archive/2016/07/30/5511522.html)  

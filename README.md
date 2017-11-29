@@ -5,6 +5,7 @@
 2. 如果开启混淆加入：  
    -keep  class net.sqlcipher.** {*;}  
    -keep  class net.sqlcipher.database.** {*;}
+3. 自定义数据库路径
 
 参考：  
 [博客](http://www.cnblogs.com/whoislcj/archive/2016/07/30/5511522.html)  

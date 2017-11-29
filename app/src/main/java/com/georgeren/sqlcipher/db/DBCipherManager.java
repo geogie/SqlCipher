@@ -20,6 +20,7 @@ public class DBCipherManager {
     private DBCipherHelper dbHelper;
 
     private DBCipherManager(Context context) {
+        DBCipherHelper.setDBPath(context);
         dbHelper = new DBCipherHelper(context.getApplicationContext());
     }
 

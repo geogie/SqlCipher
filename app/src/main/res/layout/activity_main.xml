@@ -34,4 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="查询数据" />
+    <Button
+        android:id="@+id/btnAES"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AES加密" />
 </LinearLayout>

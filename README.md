@@ -6,6 +6,7 @@
    -keep  class net.sqlcipher.** {*;}  
    -keep  class net.sqlcipher.database.** {*;}
 3. 自定义数据库路径
+4. 加入AES对称加密.md5常用于对key加密，aes常用于对value加密
 
 参考：  
 [博客](http://www.cnblogs.com/whoislcj/archive/2016/07/30/5511522.html)  

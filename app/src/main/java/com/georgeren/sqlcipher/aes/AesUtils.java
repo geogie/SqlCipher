@@ -1,5 +1,6 @@
 package com.georgeren.sqlcipher.aes;
 
+import android.os.Build;
 import android.text.TextUtils;
 
 import java.security.SecureRandom;
@@ -12,9 +13,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AesUtils {
     private final static String HEX = "0123456789ABCDEF";
-    private  static final String CBC_PKCS5_PADDING = "AES/CBC/PKCS5Padding";//AES是加密方式 CBC是工作模式 PKCS5Padding是填充模式
-    private  static final String AES = "AES";//AES 加密
-    private  static final String SHA1PRNG="SHA1PRNG";//// SHA1PRNG 强随机种子算法, 要区别4.2以上版本的调用方法
+    private static final String CBC_PKCS5_PADDING = "AES/CBC/PKCS5Padding";//AES是加密方式 CBC是工作模式 PKCS5Padding是填充模式
+    private static final String AES = "AES";//AES 加密
+    private static final String SHA1PRNG = "SHA1PRNG";//// SHA1PRNG 强随机种子算法, 要区别4.2以上版本的调用方法
+
     /*
      * 生成随机数，可以当做动态的密钥 加密和解密的密钥必须一致，不然将不能解密
      */
@@ -30,13 +32,16 @@ public class AesUtils {
         }
         return null;
     }
+
     // 对密钥进行处理
     private static byte[] getRawKey(byte[] seed) throws Exception {
         KeyGenerator kgen = KeyGenerator.getInstance(AES);
         //for android
         SecureRandom sr = null;
-        // 在4.2以上版本中，SecureRandom获取方式发生了改变
-        if (android.os.Build.VERSION.SDK_INT >= 17) {
+        // 在7.0以上版本中，SecureRandom获取方式发生了改变.google废弃。https://android-developers.googleblog.com/2018/03/cryptography-changes-in-android-p.html
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            sr = SecureRandom.getInstance("SHA1PRNG", new CryptoProvider());
+        } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {// 在4.2以上版本中，SecureRandom获取方式发生了改变
             sr = SecureRandom.getInstance(SHA1PRNG, "Crypto");
         } else {
             sr = SecureRandom.getInstance(SHA1PRNG);
@@ -53,7 +58,8 @@ public class AesUtils {
 
     /**
      * 加密
-     * @param key 密钥
+     *
+     * @param key       密钥
      * @param cleartext 加密前的文本
      * @return
      */
@@ -81,6 +87,7 @@ public class AesUtils {
         byte[] encrypted = cipher.doFinal(clear);
         return encrypted;
     }
+
     /*
      * 解密
      */
@@ -109,6 +116,7 @@ public class AesUtils {
         byte[] decrypted = cipher.doFinal(encrypted);
         return decrypted;
     }
+
     //二进制转字符
     public static String toHex(byte[] buf) {
         if (buf == null)

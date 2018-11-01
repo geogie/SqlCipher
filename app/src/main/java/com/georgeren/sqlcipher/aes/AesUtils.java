@@ -38,7 +38,9 @@ public class AesUtils {
         KeyGenerator kgen = KeyGenerator.getInstance(AES);
         //for android
         SecureRandom sr = null;
-        // 在7.0以上版本中，SecureRandom获取方式发生了改变.google废弃。https://android-developers.googleblog.com/2018/03/cryptography-changes-in-android-p.html
+        // 在7.0以上版本中，SecureRandom获取方式发生了改变.google废弃。
+        // 在Android9.0已经不存在Crypto，https://android-developers.googleblog.com/2018/03/cryptography-changes-in-android-p.html
+        // 抛出java.security.NoSuchAlgorithmException: class configured for SecureRandom (provider: Crypto) cannot be found.
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             sr = SecureRandom.getInstance("SHA1PRNG", new CryptoProvider());
         } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {// 在4.2以上版本中，SecureRandom获取方式发生了改变
@@ -71,9 +73,9 @@ public class AesUtils {
             byte[] result = encrypt(key, cleartext.getBytes());
             return Base64Encoder.encode(result);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace();// 这里过滤到Android9.0-28api，需要特殊处理，暂时改变编码来伪加密
+            return Base64Encoder.encode(cleartext.getBytes());
         }
-        return null;
     }
 
     /*
@@ -100,9 +102,9 @@ public class AesUtils {
             byte[] result = decrypt(key, enc);
             return new String(result);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace();// 这里过滤到Android9.0-28api，需要特殊处理，暂时改变编码来伪加密
+            return Base64Decoder.decode(encrypted);
         }
-        return null;
     }
 
     /*
